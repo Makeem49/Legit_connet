@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	<!-- Custom css -->
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	<link rel="shortcut icon" href="https://img.icons8.com/ios/50/000000/weixing.png" type="image/x-icon">
+
+	<!-- font awesome cdn -->
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+
+
+	<title>Legit</title>
+</head>
+
+<body>
+
+	<!-- nav bar -->
+	{% block nav %}
+	<nav class="navbar navbar-expand-lg navbar-light bg-light py-3 my-shadow sticky-top">
+		<div class="container">
+			<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+				<img src="https://img.icons8.com/ios/50/000000/weixing.png" mx-2 />
+				<span class="fs-4 mx-3">
+					<h3>Legit Connet</h3>
+				</span>
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 nav-pills">
+					<li class="nav-item mx-2"><a href="{{ url_for('page.home') }}" class="nav-link active"
+							aria-current="page">Home</a></li>
+					{% if login %}
+					<li class="nav-item mx-2"><a href="#" class="nav-link">Network</a></li>
+					<li class="nav-item mx-2"><a href="#" class="nav-link">Notifications</a></li>
+					<li class="nav-item mx-2"><a href="#" class="nav-link">Messaging</a></li>
+					<div class="dropdown text-start mx-2 nav-link">
+						<a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							<img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+								class="rounded-circle">
+						</a>
+						<ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+							<li><a class="dropdown-item" href="#">Settings</a></li>
+							<li><a class="dropdown-item" href="#">Profile</a></li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li><a class="dropdown-item" href="#">Sign out</a></li>
+						</ul>
+					</div>
+					{% else %}
+					<li class="nav-item mx-2"><a href="{{ url_for('user.login') }}" class="nav-link">Login</a></li>
+					<li class="nav-item mx-2"><a href="#" class="nav-link">Sign up</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</nav>
+	{% endblock %}
+
+	{% block content %}
+	<div class="container">
+
+		<!-- tags -->
+		{% include "global_components/tags.html" %}
+
+		<h3>Trending content</h3>
+
+		<!-- trending content -->
+		<section class="h-25">
+			<div id="carouselExampleInterval" class="carousel slide h-25" data-bs-ride="carousel">
+				<div class="carousel-inner">
+					<div class="carousel-item active" data-bs-interval="10000">
+						<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+							<div class="col-md-6 px-0">
+								<h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+								<p class="lead my-3">Multiple lines of text that form the lede, informing new readers
+									quickly and efficiently about what’s most interesting in this post’s contents.</p>
+								<p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+							</div>
+						</div>
+					</div>
+
+					<div class="carousel-item" data-bs-interval="2000">
+						<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+							<div class="col-md-6 px-0">
+								<h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+								<p class="lead my-3">Multiple lines of text that form the lede, informing new readers
+									quickly and efficiently about what’s most interesting in this post’s contents.</p>
+								<p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+							</div>
+						</div>
+					</div>
+
+					<div class="carousel-item">
+						<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+							<div class="col-md-6 px-0">
+								<h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+								<p class="lead my-3">Multiple lines of text that form the lede, informing new readers
+									quickly and efficiently about what’s most interesting in this post’s contents.</p>
+								<p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
+					data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
+					data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+		</section>
+
+		<!-- Other trending news -->
+		<div class="row my-3">
+			<div class="col-md-6">
+				<div
+					class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+					<div class="col p-4 d-flex flex-column position-static">
+						<strong class="d-inline-block mb-2 text-primary">World</strong>
+						<h3 class="mb-0">Featured post</h3>
+						<div class="mb-1 text-muted">Nov 12</div>
+						<p class="card-text mb-auto">This is a wider card with supporting text below as a natural
+							lead-in to additional content.</p>
+						<a href="#" class="stretched-link">Continue reading</a>
+					</div>
+					<div class="col-auto d-none d-lg-block">
+
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div
+					class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+					<div class="col p-4 d-flex flex-column position-static">
+						<strong class="d-inline-block mb-2 text-success">Design</strong>
+						<h3 class="mb-0">Post title</h3>
+						<div class="mb-1 text-muted">Nov 11</div>
+						<p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to
+							additional content.</p>
+						<a href="#" class="stretched-link">Continue reading</a>
+					</div>
+					<div class="col-auto d-none d-lg-block">
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+	{% endblock %}
+
+
+
+
+	<footer class="footer mt-auto py-3 bg-dark">
+		<div class="container">
+			<span class="text-muted d-flex justify-content-center">Place sticky footer content here.</span>
+		</div>
+	</footer>
+
+	<!-- Optional JavaScript; choose one of the two! -->
+
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+	<script src="{{url_for('static', filename='index.js')}}"></script>
+</body>
+
+</html>

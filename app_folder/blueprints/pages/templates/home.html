@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{}
+{% block content %}
+{% if not login %}
+{{super()}}
+{% else %}
+
+<div class="container my-4">
+    <section class="row">
+        {% include "global_components/tags.html" %}
+        <!-- add a fixed-profile-card to make the card fixed to a position -->
+        <div class="col-3  d-none d-lg-block my-profile-fixed">
+            {% include 'components/profile_summary.html' %}
+        </div>
+
+        <!-- post card -->
+        <div class=" col-xm-12 col-md-8 col-lg-6 ">
+            <div class="d-flex profile mb-5">
+                <img src="https://randomuser.me/api/portraits/women/12.jpg"
+                    class="mb-3 img-fluid profile rounded-circle">
+
+                <div class="d-flex my-post">
+                    {% include "components/modal.html" %}
+                </div>
+            </div>
+
+            <!-- 2 -->
+            {% include "components/post_component.html" %}
+            {% include "components/post_component.html" %}
+            {% include "components/post_component.html" %}
+            {% include "components/post_component.html" %}
+            {% include "components/post_component.html" %}
+
+            <!-- 3 -->
+
+        </div>
+
+
+
+        <!-- trending post -->
+        <div class="col-md-4 col-lg-3 d-none d-md-block">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Trending posts</h3>
+
+                    <hr />
+
+                    {% include "components/trending.html" %}
+                    {% include "components/trending.html" %}
+                    {% include "components/trending.html" %}
+
+
+                </div>
+
+            </div>
+        </div>
+</div>
+
+</section>
+</div>
+{% endif %}
+
+
+{% endblock %}
