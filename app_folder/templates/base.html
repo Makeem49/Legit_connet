@@ -41,8 +41,10 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 nav-pills">
-					<li class="nav-item mx-2"><a href="{{ url_for('page.home') }}" class="nav-link active"
-							aria-current="page">Home</a></li>
+					<li class="nav-item mx-2"><a href="{{ url_for('page.home') }}"
+							class="nav-link {% if g.name == 'page.home' %} {{g.active}} {% endif %}"
+							aria-current="page">Home</a>
+					</li>
 					{% if login %}
 					<li class="nav-item mx-2"><a href="#" class="nav-link">Network</a></li>
 					<li class="nav-item mx-2"><a href="#" class="nav-link">Notifications</a></li>
@@ -63,8 +65,10 @@
 						</ul>
 					</div>
 					{% else %}
-					<li class="nav-item mx-2"><a href="{{ url_for('user.login') }}" class="nav-link">Login</a></li>
-					<li class="nav-item mx-2"><a href="#" class="nav-link">Sign up</a></li>
+					<li class="nav-item mx-2"><a href="{{ url_for('user.login') }}"
+							class="nav-link {% if g.name == 'user.login'  %} {{g.active}} {% endif %}  ">Login</a></li>
+					<li class="nav-item mx-2"><a href="{{ url_for('user.logout') }}"
+							class="nav-link {% if g.name == 'user.logout' %} {{ g.active }} {% endif %}">Sign up</a></li>
 					{% endif %}
 				</ul>
 			</div>
