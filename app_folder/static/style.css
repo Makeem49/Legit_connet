@@ -39,25 +39,48 @@
 }
 
 
+
 .form-signin {
     width: 100%;
     max-width: 400px;
+    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
+
 }
 
-.floatingPassword, .floatingInput {
-    width: 400px !important;
+.form-control {
+    height: 4rem!important;
+
+}
+.page-register{
+    /* height: 100vh; */
+    background-color: #F5F5F5;
+    /* width: 100%; */
 }
 
-/* .illustration {
-    height: 82vh;
-    flex:2;
-} */
+.my-name-space{
+    width: 48%;
+}
 
+.space-gender{
+    margin-right: 2rem;
+}
 
+.my-logo::before{
+    margin-top: 6rem !important;
+}
 
+a.account-create{
+    text-decoration: none;
+}
 
 @media (min-width: 992px) {
     .modal-dialog {
       max-width: 50%;
     }
   }
+
+/* @media (max-width : 575px) {
+    .page-register {
+        margin: 2rem;
+    }
+} */
