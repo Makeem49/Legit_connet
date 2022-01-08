@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block navlink %}
+<li class="nav-item mx-2"><a href="#" class="nav-link">Network</a></li>
+<li class="nav-item mx-2"><a href="#" class="nav-link">Notifications</a></li>
+<li class="nav-item mx-2"><a href="#" class="nav-link">Messaging</a></li>
+<div class="dropdown text-start mx-2 nav-link">
+    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+    </a>
+    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><a class="dropdown-item" href="{{url_for('user.profile')}}">Profile</a></li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<section class="mt-4 container">
+    <div class="row">
+        <div class="my-panel d-flex flex-column col-xm-12 col-md-9">
+            <div class="banner">
+                <img src="{{url_for('static', filename='images/banner.jpg')}}" alt="" class="img-fluid">
+            </div>
+            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt=""
+                class="h6 rounded-circle img-fluid my-profile-image">
+            <div class="user-details mb-4">
+                <h3 class="mx-">Clearance Perry </h3>
+                <p>FUll-Stack Web Engineer (Python | React | Microservices )</p>
+            </div>
+
+            <button type="button" class="btn btn-primary text-start my-4">Your Posts</button>
+
+            {% include 'components/post_component.html' %}
+            {% include 'components/post_component.html' %}
+            {% include 'components/post_component.html' %}
+            {% include 'components/post_component.html' %}
+            {% include 'components/post_component.html' %}
+        </div>
+
+        <div class="related-user d-none d-md-block col-md-3">
+            <div class="">
+                <div class="card">
+                    <div class="card-body">
+                        <p>People you may Know </p>
+
+                        <hr />
+
+                        <div class="d-flex">
+                            <h6><img src="https://randomuser.me/api/portraits/men/22.jpg" alt=""
+                                    class="img-fluid rounded-circle likely-people"></h6>
+                            <div class="d-flex justify-content-between flex-column mx-3">
+                                <h5>Kyle Simpson</h5>
+                                <p>FUll-Stack Developer at Facebook</p>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex">
+                            <h6><img src="https://randomuser.me/api/portraits/men/12.jpg" alt=""
+                                    class="img-fluid rounded-circle likely-people"></h6>
+                            <div class="d-flex justify-content-between flex-column mx-3">
+                                <h5>John Doe</h5>
+                                <p>FUll-Stack Developer at Tesla</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="d-flex">
+                            <h6><img src="https://randomuser.me/api/portraits/men/30.jpg" alt=""
+                                    class="img-fluid rounded-circle likely-people"></h6>
+                            <div class="d-flex justify-content-between flex-column mx-3">
+                                <h5>Mark Sentence</h5>
+                                <p>FUll-Stack Developer at Apple</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
