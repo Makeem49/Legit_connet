@@ -6,7 +6,8 @@
 
 
 <div class="page-register d-flex flex-column justify-content-center align-items-center">
-    <form class="form-signin">
+    <form class="form-signin" method="post" action="">
+        {{ form.csrf_token() }}
         <div class="d-flex justify-content-center">
             <img class="my-logo mb-4 img-fluid" src="https://img.icons8.com/ios/50/000000/weixing.png" alt=""
                 width="100" height="50">
@@ -17,11 +18,11 @@
 
         <div class="d-block d-sm-flex  justify-content-between g-2 mb-2">
             <div class="form-floating my-name-space">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Surname</label>
             </div>
             <div class="form-floating my-name-space">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="text" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">First name</label>
             </div>
         </div>
@@ -34,21 +35,42 @@
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
         </div>
+        <div class="form-floating mb-3">
+            {{ form.confirm_password(class="form-control", id='floatingPassword', placeholder="Confirm password") }}
+            <label for="floatingPassword">Confirm Password</label>
+        </div>
 
         <div class="mb-2">
-            <span class="space-gender">gender</span>
-            <div class="form-check form-check-inline">
+            <span class="space-gender">Gender</span>
+            <!-- <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
                     value="option1">
                 <label class="form-check-label" for="inlineRadio1">Male</label>
-            </div>
+            </div> -->
+            {% for radio in form.gender %}
+            {% if radio == 'male' %}
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                    value="option1">
-                <label class="form-check-label" for="inlineRadio1">Female</label>
+                {{ radio(class="form-check-input") }}
+                {{radio.label(class="form-check-label")}}
             </div>
+            {% else %}
+            <div class="form-check form-check-inline">
+                {{ radio(class="form-check-input", ) }}
+                {{radio.label(class="form-check-label")}}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <!-- <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                    value="option1">
+                <label class="form-check-label" for="inlineRadio2">Female</label>
+            </div> -->
+            <!-- {{form.gender.label}}
+            {{form.gender}} -->
         </div>
+
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+
 
 
         <hr />
@@ -110,3 +132,8 @@
 
 
 {% endblock %}
+
+<ul id="gender">
+    <li><input id="gender-0" name="gender" type="radio" value="male"> <label for="gender-0">male</label></li>
+    <li><input id="gender-1" name="gender" type="radio" value="female"> <label for="gender-1">female</label></li>
+</ul>

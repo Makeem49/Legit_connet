@@ -73,14 +73,52 @@ a.account-create{
     text-decoration: none;
 }
 
+.board{
+    height: 400px;
+}
+
+.my-panel {
+    /* padding-left: 3rem; */
+}
+
+.banner{
+    height: 200px;
+    overflow: hidden;
+
+
+}
+
+.my-profile-image{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    margin: 5rem 0 ;
+    margin-left: 2rem;
+}
+
+.user-details{
+    margin-top: 6rem ;
+    margin-left: 2rem;
+}
+
+.likely-people{
+    height: 80px;
+}
+
+
 @media (min-width: 992px) {
     .modal-dialog {
       max-width: 50%;
     }
   }
 
-/* @media (max-width : 575px) {
-    .page-register {
-        margin: 2rem;
+@media (max-width : 574px) {
+    .page-login, .page-register {
+        padding: 2rem;
     }
-} */
+    
+    .my-name-space {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}

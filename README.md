@@ -1,2 +1,2 @@
-# Legit_connet
-Legit_connet is a social media platform where users can post, like, share, and react to a post. This application is created for LinkedIn tutorials
+# blog-app
+A web application where user can post content, like share, and comment on people's content. This is a full CRUD application designed with flask. 

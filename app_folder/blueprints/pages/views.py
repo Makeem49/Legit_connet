@@ -11,8 +11,5 @@ def get_current_blueprint():
 @page.route('/home')
 def home():
     login = True
-    active = 'active'
-    current_page = g.name
-    print(current_page)
     return render_template('home.html', login=login)
     

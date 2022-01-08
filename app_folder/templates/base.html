@@ -45,6 +45,7 @@
 							class="nav-link {% if g.name == 'page.home' %} {{g.active}} {% endif %}"
 							aria-current="page">Home</a>
 					</li>
+					{% block navlink %}
 					{% if login %}
 					<li class="nav-item mx-2"><a href="#" class="nav-link">Network</a></li>
 					<li class="nav-item mx-2"><a href="#" class="nav-link">Notifications</a></li>
@@ -57,19 +58,21 @@
 						</a>
 						<ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
 							<li><a class="dropdown-item" href="#">Settings</a></li>
-							<li><a class="dropdown-item" href="#">Profile</a></li>
+							<li><a class="dropdown-item" href="{{url_for('user.profile')}}">Profile</a></li>
 							<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="#">Sign out</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
 						</ul>
 					</div>
 					{% else %}
-					<li class="nav-item mx-2"><a href="{{ url_for('user.login') }}"
-							class="nav-link {% if g.name == 'user.login'  %} {{g.active}} {% endif %}  ">Login</a></li>
-					<li class="nav-item mx-2"><a href="{{ url_for('user.logout') }}"
-							class="nav-link {% if g.name == 'user.logout' %} {{ g.active }} {% endif %}">Sign up</a></li>
+					<li class="nav-item mx-2"><a href="{{ url_for('auth.login') }}"
+							class="nav-link {% if g.name == 'auth.login'  %} {{g.active}} {% endif %}  ">Login</a></li>
+					<li class="nav-item mx-2"><a href="{{ url_for('auth.register') }}"
+							class="nav-link {% if g.name == 'auth.register' %} {{ g.active }} {% endif %}">Sign up</a>
+					</li>
 					{% endif %}
+					{% endblock navlink %}
 				</ul>
 			</div>
 		</div>
@@ -80,7 +83,7 @@
 	<div class="container">
 
 		<!-- tags -->
-		{% include "global_components/tags.html" %}
+		{% include "components/tags.html" %}
 
 		<h3>Trending content</h3>
 
