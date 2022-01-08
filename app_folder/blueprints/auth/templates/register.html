@@ -42,11 +42,6 @@
 
         <div class="mb-2">
             <span class="space-gender">Gender</span>
-            <!-- <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                    value="option1">
-                <label class="form-check-label" for="inlineRadio1">Male</label>
-            </div> -->
             {% for radio in form.gender %}
             {% if radio == 'male' %}
             <div class="form-check form-check-inline">
@@ -60,13 +55,6 @@
             </div>
             {% endif %}
             {% endfor %}
-            <!-- <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                    value="option1">
-                <label class="form-check-label" for="inlineRadio2">Female</label>
-            </div> -->
-            <!-- {{form.gender.label}}
-            {{form.gender}} -->
         </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
