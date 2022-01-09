@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
-
+{% import 'components/render_form.html' as f with context %}
 
 
 {% block content %}
-
+<div id="validationServerUsernameFeedback" class="invalid-feedback">
+    Please choose a username.
+</div>
 
 <div class="page-register d-flex flex-column justify-content-center align-items-center">
-    <form class="form-signin" method="post" action="">
-        {{ form.csrf_token() }}
+    <form class="form-signin needs-validation" method="post" action="{{url_for('auth.register')}}">
+        {{ form.hidden_tag() }}{{ form.hidden_tag() }}
         <div class="d-flex justify-content-center">
             <img class="my-logo mb-4 img-fluid" src="https://img.icons8.com/ios/50/000000/weixing.png" alt=""
                 width="100" height="50">
@@ -17,48 +19,33 @@
         <h6 class="text-center mb-3">It's fast and easy</h6>
 
         <div class="d-block d-sm-flex  justify-content-between g-2 mb-2">
-            <div class="form-floating my-name-space">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Surname</label>
+            <div class="my-name-space">
+                {{ f.render_form_field(form.surname) }}
+
             </div>
-            <div class="form-floating my-name-space">
-                <input type="text" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">First name</label>
+
+            <div class="my-name-space">
+                {{ f.render_form_field(form.name) }}
+
             </div>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+            {{ f.render_form_field(form.email) }}
         </div>
         <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+            {{ f.render_form_field(form.password) }}
         </div>
         <div class="form-floating mb-3">
-            {{ form.confirm_password(class="form-control", id='floatingPassword', placeholder="Confirm password") }}
-            <label for="floatingPassword">Confirm Password</label>
+            {{ f.render_form_field(form.confirm_password) }}
         </div>
 
         <div class="mb-2">
             <span class="space-gender">Gender</span>
-            {% for radio in form.gender %}
-            {% if radio == 'male' %}
-            <div class="form-check form-check-inline">
-                {{ radio(class="form-check-input") }}
-                {{radio.label(class="form-check-label")}}
-            </div>
-            {% else %}
-            <div class="form-check form-check-inline">
-                {{ radio(class="form-check-input", ) }}
-                {{radio.label(class="form-check-label")}}
-            </div>
-            {% endif %}
-            {% endfor %}
+            {{ f.render_form_field(form.gender) }}
         </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
-
 
 
         <hr />
