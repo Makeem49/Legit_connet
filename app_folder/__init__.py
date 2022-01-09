@@ -4,8 +4,10 @@ from flask import Flask
 from app_folder.blueprints.pages import page
 from app_folder.blueprints.users import user
 from app_folder.blueprints.auth import auth
+from app_folder.blueprints.error import error
 
 from app_folder.extensions import db 
+from app_folder.extensions import csrf
 
 
 
@@ -45,3 +47,4 @@ def create_app(test_config=None):
 
 def extensions(app):
     db.init_app(app)
+    csrf.init_app(app)
