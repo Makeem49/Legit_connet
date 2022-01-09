@@ -10,6 +10,5 @@ def get_current_blueprint():
 @page.route('/')
 @page.route('/home')
 def home():
-    login = True
-    return render_template('home.html', login=login)
+    return render_template('home.html')
     
