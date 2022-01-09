@@ -1,0 +1,29 @@
+{% macro render_form_field(field) %}
+
+{% if field.type == 'RadioField' %}
+{% for radio in field %}
+<div class="form-check form-check-inline">
+    {{ radio(class="form-check-input") }}
+    {{radio.label(class="form-check-label")}}
+</div>
+{% endfor %}
+{% elif field.type == 'BooleanField' %}
+<label>
+    {{ field() }} <div class="mx-2 d-inline">
+        {{ field.label() }}
+    </div>
+</label>
+{% else%}
+<div class="form-floating">
+    {{ field(class="form-control" , id="floatingInput", placeholder="name@example.com")}}
+    <label for="floatingInput">{{field.label()}}</label>
+</div>
+{% if field.errors %}
+<ul class="invalid-feedback" id="validationServerUsernameFeedback">
+    {% for error in field.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+{% endmacro %}
