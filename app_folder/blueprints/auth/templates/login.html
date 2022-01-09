@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% import 'components/render_form.html' as f with context %}
+
 
 {% block content %}
 
 <div class="page-login d-flex flex-column justify-content-center align-items-center">
-    <form class="form-signin">
+    <form class="form-signin" method="post">
+        {{ form.hidden_tag() }}
         <div class="d-flex justify-content-center">
             <img class="mb-4 img-fluid" src="https://img.icons8.com/ios/50/000000/weixing.png" alt="" width="100"
                 height="50">
@@ -12,23 +15,27 @@
         <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+            <!-- <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label> -->
+            {{ f.render_form_field(form.email) }}
         </div>
         <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+            <!-- <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label> -->
+            {{ f.render_form_field(form.password) }}
         </div>
 
         <div class="mb-3">
-            <label>
+            <!-- <label>
                 <input type="checkbox" value="remember-me"> Remember me
-            </label>
+            </label> -->
+
+            {{ f.render_form_field(form.remember_me) }}
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
 
         <div class="my-3 d-flex justify-content-center">
-            <a href="#" class="text-center">Forgotten password?</a>
+            <a href="{{url_for('auth.forget_password')}}" class="text-center">Forgotten password?</a>
         </div>
 
         <hr />
