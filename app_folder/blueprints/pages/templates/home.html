@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
+{% import 'components/flash_message.html' as message %}
 
-{}
+
 {% block content %}
-{% if not login %}
-{{super()}}
-{% else %}
 
 <div class="container my-4">
     <section class="row">
@@ -59,7 +57,7 @@
 
 </section>
 </div>
-{% endif %}
+
 
 
 {% endblock %}
