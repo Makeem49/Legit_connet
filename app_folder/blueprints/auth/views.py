@@ -3,6 +3,8 @@ from app_folder.blueprints.auth import auth
 from app_folder.blueprints.auth.forms import RegisterForm, LoginForm, ForgetPassword, ResetPasswordForm
 from app_folder.blueprints.users.model import User
 from app_folder.extensions import db
+from app_folder.email import send_mail
+import os 
 
 
 
@@ -45,8 +47,14 @@ def register():
             user = User(surname=surname, first_name=first_name, email=email, password=password, gender=gender)
             db.session.add(user)
             db.session.commit()
+            os.environ.get('MAIL_USERNAME')
+            print(email)
+            send_mail(email, 'Legit Connet Account', 'mail/account', surname=surname )
             flash('Your account has been register, you can now login to access your account', 'success')
             return redirect(url_for('auth.login'))
+        else: 
+            flash('There is an account associated with this email, kindly register with different email address.', 'info')
+            return redirect(url_for('auth.register'))
     return render_template('register.html', form=form)
 
 @auth.route('/forget_password', methods=['GET', 'POST'])
@@ -55,6 +63,7 @@ def forget_password():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
+            send_mail(user.email, 'Legit Connet Account', 'mail/account', surname=user.surname )
             flash('A password reset link has been sent to your email address', 'success')
             return redirect(url_for('auth.resetpassword'))
         else: 
