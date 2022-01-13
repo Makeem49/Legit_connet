@@ -1,10 +1,14 @@
 import os
-from app_folder import create_app
+from app_folder.app import create_app
 from app_folder.blueprints.users.model import User
 from app_folder.extensions import db 
+from flask_migrate import Migrate
+from app_folder.tasks import celery
 
 
-app = create_app()
+app = create_app(celery=celery)
+
+migrate = Migrate(app, db)
 
 @app.shell_context_processor
 def make_shell_context():
