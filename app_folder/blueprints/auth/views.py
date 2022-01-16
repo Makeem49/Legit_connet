@@ -5,8 +5,9 @@ from app_folder.blueprints.users.model import User
 from app_folder.extensions import db
 from app_folder.email import send_mail
 import os 
-
-
+from lib.safe_next_url import is_safe_url
+from flask_login import login_user, login_required, logout_user
+from lib.custom_token import serializer
 
 @auth.before_request 
 def get_current_blueprint():
@@ -18,18 +19,22 @@ def login():
     form = LoginForm()
     print('Before validate')
     if form.validate_on_submit():
-        print('validating')
         email = form.email.data
         user = db.session.query(User).filter_by(email=email).first()
-        if user:
-            if user.password == form.password.data:
-                flash('You have successfully logged in', 'success')
-                return redirect(url_for('user.profile'))
-            else :
-                flash('Incorrect password or email', 'warning')
-                return redirect(url_for('auth.login'))
+        if user and user.verify_password(form.password.data):
+            next_page = request.args.get('next')
+            if login_user(user, remember=form.remember_me.data) and user.is_active():
+                if next_page:
+                    return redirect(is_safe_url(next_page))
+                else:
+                    flash('You have successfully logged in', 'success')
+                    return redirect(url_for('user.profile'))
+            else:
+                flash("Your account has been deactivated, please contact the admin re-access your account.", 'info')
+        elif user is None:
+            flash('There is no user associated with this account, please register to access this page.', 'info')
         else:
-            flash('User not found, register to create an account', 'info')
+            flash("Incorrect credentials", 'warning')
     return render_template('login.html', form=form)
 
 
@@ -44,12 +49,11 @@ def register():
             email = form.email.data
             password = form.password.data
             gender = form.gender.data
-            user = User(surname=surname, first_name=first_name, email=email, password=password, gender=gender)
+            user = User(surname=surname, first_name=first_name, email=email, password=password, gender=gender, session_token=serializer().dumps([surname, password]))
             db.session.add(user)
             db.session.commit()
             os.environ.get('MAIL_USERNAME')
-            print(email)
-            send_mail(email, 'Legit Connet Account', 'mail/account', surname=surname )
+            send_mail(email, 'Legit Connet Account', 'mail/registration', surname=surname )
             flash('Your account has been register, you can now login to access your account', 'success')
             return redirect(url_for('auth.login'))
         else: 
@@ -63,7 +67,7 @@ def forget_password():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            send_mail(user.email, 'Legit Connet Account', 'mail/account', surname=user.surname )
+            send_mail.delay(user.email, 'Legit Connet Account', 'mail/registration', surname=user.surname )
             flash('A password reset link has been sent to your email address', 'success')
             return redirect(url_for('auth.resetpassword'))
         else: 
@@ -85,5 +89,8 @@ def resetpassword():
 
 
 @auth.route('/logout')
+@login_required
 def logout():
-    return redirect(url_for('auth.login'))
+    logout_user()
+    flash("You have successfully logout", 'success')
+    return redirect(url_for('page.home'))
