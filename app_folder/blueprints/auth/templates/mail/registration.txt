@@ -1,1 +1,5 @@
-Hello your email account has been successfully registered
+Hello {{name}} confirm your account by click on the below link
+
+{{ url_for('auth.confirm', token=token, _external = True) }}
+
+Thanks
