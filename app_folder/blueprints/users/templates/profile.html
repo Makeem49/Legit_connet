@@ -1,25 +1,5 @@
 {% extends "base.html" %}
 
-{% block navlink %}
-<li class="nav-item mx-2"><a href="#" class="nav-link">Network</a></li>
-<li class="nav-item mx-2"><a href="#" class="nav-link">Notifications</a></li>
-<li class="nav-item mx-2"><a href="#" class="nav-link">Messaging</a></li>
-<div class="dropdown text-start mx-2 nav-link">
-    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-    </a>
-    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-        <li><a class="dropdown-item" href="#">Settings</a></li>
-        <li><a class="dropdown-item" href="{{url_for('user.profile')}}">Profile</a></li>
-        <li>
-            <hr class="dropdown-divider">
-        </li>
-        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
-    </ul>
-</div>
-{% endblock %}
-
 {% block content %}
 
 <section class="mt-4 container">
@@ -33,6 +13,8 @@
             <div class="user-details mb-4">
                 <h3 class="mx-">{{current_user.surname}} {{current_user.first_name}} </h3>
                 <p>FUll-Stack Web Engineer (Python | React | Microservices )</p>
+                <p>Ladoke Akintola University of Technology</p>
+                <p>Bachelor of Technology in Urban studies and Desi</p>
             </div>
 
             <button type="button" class="btn btn-primary text-start my-4">Your Posts</button>
