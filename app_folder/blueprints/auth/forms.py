@@ -1,6 +1,6 @@
 from flask_wtf import  FlaskForm
-from wtforms import StringField, PasswordField, RadioField, EmailField, SubmitField, BooleanField
-from wtforms.validators import InputRequired, EqualTo, Email, ValidationError
+from wtforms import StringField, PasswordField, RadioField, EmailField, SubmitField, BooleanField, DateField
+from wtforms.validators import InputRequired, EqualTo, Email, ValidationError, Optional
 from app_folder.blueprints.users.model import User
 
 def custom_keywords():
@@ -13,15 +13,10 @@ class RegisterForm(FlaskForm):
     email = EmailField('Email', [InputRequired(), Email(message='Email is required')], render_kw=custom_keywords())
     password = PasswordField("password", [InputRequired()])
     confirm_password = PasswordField("Confirm pasword", [ InputRequired(), EqualTo('password', message='Password must match') ])
-    gender = RadioField('Gender', choices=['male', 'female'])
+    gender = RadioField('Gender', [InputRequired()] ,choices=['male', 'female'])
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
-        if user: 
-            raise ValidationError('There is a user with email account.')
-    
-    def validate_username(self, surname):
-        user = User.query.filter_by(surname=surname.data).first()
         if user: 
             raise ValidationError('There is a user with email account.')
 
@@ -40,8 +35,3 @@ class ForgetPassword(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField("password", [InputRequired()])
     confirm_password = PasswordField("Confirm pasword", [ InputRequired(), EqualTo('password', message='Password must match') ])
-
-class UpdateCredentials(FlaskForm):
-    password = PasswordField('Password', [InputRequired()])
-    email = EmailField("Email")
-    
