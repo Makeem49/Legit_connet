@@ -33,7 +33,11 @@ class User(db.Model, UserMixin):
     last_seen = Column(DateTime, default=datetime.utcnow)
     confirmed = Column(Boolean, server_default='f', nullable=False)
 
+    # Experience
     job_title = Column(String(250), nullable=True, server_default='')
+    education = Column(String(100), nullable=True, server_default='')
+    course = Column(String(100), nullable=True, server_default='')
+    about_me = Column(Text, nullable=True, server_default='')
 
     # custom token 
     session_token = Column(Text, nullable=False, server_default='', unique=True)
