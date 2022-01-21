@@ -105,6 +105,23 @@ a.account-create{
     height: 80px;
 }
 
+.user-profile{
+    width: 60%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 100%;
+}
+
 
 @media (min-width: 992px) {
     .modal-dialog {
