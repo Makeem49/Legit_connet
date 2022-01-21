@@ -137,7 +137,3 @@ def resend_confirmation():
     send_mail.delay(current_user.email, 'Account Confirmation', 'mail/registration', token=token)
     flash('Activation link sent.', 'success')
     return redirect(url_for('auth.unconfirm'))
-
-@auth.route('update_email', methods=['GET', 'POST'])
-def update_email():
-    return render_template('update_email.html', form=form)
