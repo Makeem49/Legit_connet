@@ -97,6 +97,27 @@ class User(db.Model, UserMixin):
         db.session.commit()
         return True
 
+    def generate_token_for_new_email_address(self):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
+        return s.dumps({'email' : self.email})
+
+
+    def confirm_new_email_address(self, token, new_email):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+           data = s.loads(token)
+        except: 
+            return False
+
+        if data.get('email') != self.email:
+            return False
+
+        self.email = new_email
+        db.session.add(self.email)
+        db.session.commit()
+        return True
+        
+
 
     def __repr__(self):
         return f'{self.surname} {self.first_name} is created.'
