@@ -1,17 +1,15 @@
-from flask import Flask, request
-from flask_moment import Moment
-from datetime import datetime
+# from celery import Celery
+
+# app = Celery("index", 
+#              broker="redis://localhost:6379",
+#              backend="db+sqlite:///results.db")
 
 
-app = Flask(__name__)
-moment = Moment(app)
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return 'page not found', 404
+# @app.task
+# def multiply(num1, num2):
+#     return num1 * num2
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
