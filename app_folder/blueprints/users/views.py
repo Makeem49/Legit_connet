@@ -1,14 +1,19 @@
-from flask import redirect, render_template, url_for, flash 
+from os import abort
+from flask import redirect, render_template, request, url_for, flash 
 from app_folder.blueprints.users import user
+from app_folder.blueprints.users.model import User
 from flask_login import login_required, current_user
 from app_folder.blueprints.users.forms import UpdateCredentials
 from app_folder.extensions import db 
+from flask import abort
 
 
-
-@user.route('/profile')
-def profile():
-    return render_template('profile.html')
+@user.route('/profile/<string:username>')
+def profile(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        abort(404)    
+    return render_template('profile.html', user=user)
 
 @user.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -21,7 +26,7 @@ def settings():
         current_user.eductaion = form.education.data
         current_user.about_me = form.about_me.data
         current_user.date_of_birth  = form.about_me.data
-        current_user.username = form.username.data
+        current_user.username = form.username.data.lower()
         db.session.commit()
         flash('Profile updated', 'success')
         return redirect(url_for('user.profile'))
