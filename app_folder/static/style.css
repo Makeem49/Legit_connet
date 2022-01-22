@@ -111,7 +111,9 @@ a.account-create{
     margin: 0 auto;
 }
 
-
+.email_page {
+    height: 100vh;
+}
 
 .footer{
     position: fixed;
