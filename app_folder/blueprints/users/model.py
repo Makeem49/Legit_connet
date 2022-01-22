@@ -24,12 +24,13 @@ class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     surname = Column(String(50), nullable=False)
     first_name = Column(String(50), nullable=False)
-    username = Column(String(), nullable=True, unique=True)
+    username = Column(String(), nullable=False, unique=True)
     email = Column(String(60), nullable=False, unique=True)
     password = Column(String(24), nullable=False)
     gender = Column(String(10), nullable=False)
     password_hash = Column(String(128))
     active = Column(Boolean, server_default='true', nullable=False)
+    member_since = Column(DateTime, default=datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.utcnow)
     confirmed = Column(Boolean, server_default='f', nullable=False)
 
@@ -97,12 +98,12 @@ class User(db.Model, UserMixin):
         db.session.commit()
         return True
 
-    def generate_token_for_new_email_address(self):
+    def generate_token_for_new_email_address(self, new_email):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-        return s.dumps({'email' : self.email})
+        return s.dumps({'email' : self.email, 'new_email' : new_email})
 
 
-    def confirm_new_email_address(self, token, new_email):
+    def confirm_new_email_address(self, token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
            data = s.loads(token)
@@ -112,13 +113,17 @@ class User(db.Model, UserMixin):
         if data.get('email') != self.email:
             return False
 
-        self.email = new_email
+        self.email = data.get('new_email')
         db.session.add(self.email)
         db.session.commit()
         return True
-        
 
-
+    def last_seen(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
+    
+    
     def __repr__(self):
         return f'{self.surname} {self.first_name} is created.'
 
