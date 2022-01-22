@@ -28,14 +28,32 @@
             <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">@</span>
                 {% if current_user.username %}
-                {{form.username(disabled=True , class="form-control", placeholder='Username' , **{"aria-label":"Username",
+                {{form.username(disabled=True , class="form-control", placeholder='Username' ,
+                **{"aria-label":"Username",
                 "aria-describedby":"addon-wrapping"}) }}
                 {% else %}
-                {{form.username(class="form-control", placeholder='Username', **{"aria-label":"Username", "aria-describedby":"addon-wrapping"}) }}
+                {% if form.username.errors %}
+                {{form.username(class="form-control", placeholder='Username',
+                **{"aria-label":"Username","aria-describedby":"addon-wrapping"}) }}
+                <ul class="invalid-feedback" id="validationServerUsernameFeedback">
+                    {% for error in form.username.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                {{form.username(class="form-control", placeholder='Username',
+                **{"aria-label":"Username","aria-describedby":"addon-wrapping"}) }}
+                {% endif %}
                 {% endif %}
             </div>
-            <div class="my-3">
-                {{ f.render_form_field(form.email) }}
+            <div class="my-3 row">
+                <div class="col-xm-12 col-md-8">
+                    {{ f.render_form_field(form.email) }}
+                </div>
+                <div class="col-xm-12 col-md-3 text-end">
+                    <a href="{{url_for('auth.update_email_address')}}" class="btn btn-secondary">Change email</a>
+                </div>
+
             </div>
             <div class="row my-3">
                 <div class="col-xm-12 col-md-6 mt-xm-2 mt-2">
@@ -54,25 +72,26 @@
                 {% if form.password.errors %}
                 <div class="form-group">
                     {{ form.password(class="form-control is-invalid" , id="validationServerUsername")}}
-                
+
                     <ul class="invalid-feedback" id="validationServerUsernameFeedback">
                         {% for error in form.password.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
-                </div>  
+                </div>
                 {% else %}
-                    {{ form.password(class="form-control form-control-lg" , placeholder="name@example.com",
-                    id="validationServerUsername")}}
+                {{ form.password(class="form-control form-control-lg" , placeholder="name@example.com",
+                id="validationServerUsername")}}
                 {% endif %}
                 <label>*{{form.password.label()}}</label>
             </div>
             {% endif %}
 
-            
+
 
             <div class="d-flex justify-content-between my-4">
-                <a href="{{url_for('user.profile')}}" class="btn btn-secondary">Cancel</a>
+                <a href="{{url_for('user.profile', username=current_user.username)}}"
+                    class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-success">Update profile</button>
 
             </div>
