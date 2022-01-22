@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card bg-dark text-white">
+        <img src="{{url_for('static' , filename='images/Account.png')}}" class="card-img" alt="...">
+        <div class="card-img-overlay">
+            <h5 class="card-title">Hello {{current_user.surname}} {{current_user.first_name}} kindly confirm your
+                account in
+                order to access your account.</h5>
+            <p class="card-text">Before you can access this site, you need to confirm your account. Check your email for
+                confirmation message.</p>
+            <p class="card-text">Last updated 3 mins ago</p>
+
+            <p>Need another confirmation email? <a href="{{url_for('auth.resend_confirmation')}}"
+                    class="btn btn-primary">Click here</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container">
+        <span class="text-muted d-flex justify-content-center">Place sticky footer content here.</span>
+    </div>
+</footer>
