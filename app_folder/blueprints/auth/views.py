@@ -79,8 +79,6 @@ def register():
 @auth.route('/forget_password', methods=['GET', 'POST'])
 @already_logged_in
 def forget_password():
-    if current_user.is_authenticated:
-        return redirect(url_for('user.profile'))
     form = ForgetPassword()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -141,7 +139,8 @@ def unconfirm():
 @login_required
 def resend_confirmation():
     if current_user.confirmed:
-        return redirect(url_for('page.profile'))
+        flash("Your account has been confirmed", 'success')
+        return redirect(url_for('user.profile', username=current_user.username))
     token = current_user.generate_confirmation_token()
     send_mail.delay(current_user.email, 'Account Confirmation', 'mail/registration', token=token)
     flash('Activation link sent.', 'success')
@@ -154,14 +153,12 @@ def update_email_address():
     if form.validate_on_submit():
         email = form.new_email.data
         token = current_user.generate_token_for_new_email_address(email)
-        print(f"{token} new token ---> is printed out.")
         send_mail.delay(email, 'Legit Email Reset', 'mail/change_email', name=current_user.first_name, token=token)
         flash('A link has been been sent to your new email address, please confirm by clicking it.', 'success')
         return redirect(url_for('user.settings'))
     return render_template('update_email.html', form=form)
 
 @auth.route('/comfirm_email/<token>')
-@login_required
 def confirm_email_address(token):
     confirm = current_user.confirm_new_email_address(token)
     if confirm:
