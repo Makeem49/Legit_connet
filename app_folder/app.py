@@ -5,6 +5,8 @@ from app_folder.blueprints.pages import page
 from app_folder.blueprints.users import user
 from app_folder.blueprints.auth import auth
 from app_folder.blueprints.error import error
+from app_folder.blueprints.admin import admin
+from app_folder.blueprints.moderator import moderator
 from app_folder.blueprints.users.model import MyAnonymousUser
 
 from app_folder.extensions import db 
@@ -66,6 +68,8 @@ def create_app(settings_override=None, **kwargs):
     app.register_blueprint(page)
     app.register_blueprint(user)
     app.register_blueprint(auth)
+    app.register_blueprint(admin)
+    app.register_blueprint(moderator)
 
     # initialising extension
     extensions(app)
