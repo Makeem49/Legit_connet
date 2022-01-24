@@ -12,16 +12,12 @@ class UpdateCredentials(FlaskForm):
     name = StringField('First name', [Optional()])
     password = PasswordField('Password', [InputRequired()])
     email = EmailField("Email", [Optional()])
+    username =StringField('Username', [Optional()])
     course = StringField('Course', [Optional()])
     education = StringField('Education', [Optional()])
     about_me = TextAreaField('About me', [Optional()])
     date_of_birth = DateField('Date of birth', [Optional()])   
-    username = StringField("Username", [Optional()])
-
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError(f'{username.data} is not available, choose another username.')
+    new_password = PasswordField('New password', [Optional()]) 
 
     def validate_email(self, email):
         user = User.query.filter_by(username=email.data).first()
