@@ -5,6 +5,7 @@ from app_folder.blueprints.pages import page
 from app_folder.blueprints.users import user
 from app_folder.blueprints.auth import auth
 from app_folder.blueprints.error import error
+from app_folder.blueprints.users.model import MyAnonymousUser
 
 from app_folder.extensions import db 
 from app_folder.extensions import csrf
@@ -29,6 +30,9 @@ login_manager.needs_refresh_message_category = "info"
 
 # flask_login session protection 
 login_manager.session_protection = "strong"
+
+# Anonymous user
+login_manager.anonymous_user = MyAnonymousUser
 
 
 
