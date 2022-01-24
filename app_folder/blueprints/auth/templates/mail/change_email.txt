@@ -1,0 +1,5 @@
+Hello {{name}} confirm your account by click on the below link to change your email address
+
+{{ url_for('auth.confirm_email_address', token=token, _external=True) }}
+
+Thanks
