@@ -25,27 +25,6 @@
                     {{ f.render_form_field(form.name) }}
                 </div>
             </div>
-            <div class="input-group flex-nowrap">
-                <span class="input-group-text" id="addon-wrapping">@</span>
-                {% if current_user.username %}
-                {{form.username(disabled=True , class="form-control", placeholder='Username' ,
-                **{"aria-label":"Username",
-                "aria-describedby":"addon-wrapping"}) }}
-                {% else %}
-                {% if form.username.errors %}
-                {{form.username(class="form-control", placeholder='Username',
-                **{"aria-label":"Username","aria-describedby":"addon-wrapping"}) }}
-                <ul class="invalid-feedback" id="validationServerUsernameFeedback">
-                    {% for error in form.username.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                {{form.username(class="form-control", placeholder='Username',
-                **{"aria-label":"Username","aria-describedby":"addon-wrapping"}) }}
-                {% endif %}
-                {% endif %}
-            </div>
             <div class="my-3 row">
                 <div class="col-xm-12 col-md-8">
                     {{ f.render_form_field(form.email) }}
@@ -54,6 +33,11 @@
                     <a href="{{url_for('auth.update_email_address')}}" class="btn btn-secondary">Change email</a>
                 </div>
 
+            </div>
+            <div class="form-floating">
+                {{ form.username(class="form-control form-control-lg" , disabled=True ,
+                placeholder="name@example.com", id="validationServerUsername")}}
+                <label>{{form.username.label()}}</label>
             </div>
             <div class="row my-3">
                 <div class="col-xm-12 col-md-6 mt-xm-2 mt-2">
@@ -67,25 +51,31 @@
                 {{f.render_form_field(form.about_me)}}
             </div>
 
-            {% if form.password.flags.required %}
-            <div class="form-floating w-50">
-                {% if form.password.errors %}
-                <div class="form-group">
-                    {{ form.password(class="form-control is-invalid" , id="validationServerUsername")}}
-
-                    <ul class="invalid-feedback" id="validationServerUsernameFeedback">
-                        {% for error in form.password.errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
+            <div class="d-xm-block d-md-flex justify-content-between">
+                <div class="form-floating col-xm-12 col-md-6 my-3">
+                    {{ form.new_password(class="form-control" , id="validationServerUsername")}}
+                    <label>{{form.new_password.label()}}</label>
                 </div>
-                {% else %}
-                {{ form.password(class="form-control form-control-lg" , placeholder="name@example.com",
-                id="validationServerUsername")}}
+                {% if form.password.flags.required %}
+                <div class="form-floating col-xm-12 col-md-6 my-3">
+                    {% if form.password.errors %}
+                    <div class="form-group">
+                        {{ form.password(class="form-control is-invalid" , id="validationServerUsername")}}
+
+                        <ul class="invalid-feedback" id="validationServerUsernameFeedback">
+                            {% for error in form.password.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    {{ form.password(class="form-control form-control-lg" , placeholder="name@example.com",
+                    id="validationServerUsername")}}
+                    {% endif %}
+                    <label>*{{form.password.label()}}</label>
+                </div>
                 {% endif %}
-                <label>*{{form.password.label()}}</label>
             </div>
-            {% endif %}
 
 
 
