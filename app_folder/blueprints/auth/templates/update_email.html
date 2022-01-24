@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% import 'components/render_form.html' as f %}
+
+{% block content %}
+<div class="email_page">
+
+    <div class="container h-100 my-5 user-profile">
+        <form action="{{ url_for('auth.update_email_address') }}" method="post">
+            {{form.hidden_tag()}}
+            <div class="my-3">
+                {{ f.render_form_field(form.new_email) }}
+            </div>
+            <div class="my-3">
+                {{ f.render_form_field(form.confirm_email) }}
+            </div>
+            <div class="my-3">
+                {{ f.render_form_field(form.password) }}
+            </div>
+    
+            <div class="d-flex justify-content-between">
+                <a href="{{url_for('user.settings')}}" class="btn btn-secondary">Cancle</a>
+                <button type="submit" class="btn btn-primary">Update email</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
