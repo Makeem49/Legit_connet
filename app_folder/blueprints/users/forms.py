@@ -4,19 +4,16 @@ from wtforms.validators import ValidationError, Optional, InputRequired
 from .model import User
 from flask_login import current_user
 
-def custom_keywords():
-    return {"cols":10,"rows":20}
 
 class UpdateCredentials(FlaskForm):
     surname = StringField('Surname', [Optional()])
-    name = StringField('First name', [Optional()])
+    first_name = StringField('First name', [Optional()])
     password = PasswordField('Password', [InputRequired()])
     email = EmailField("Email", [Optional()])
     username =StringField('Username', [Optional()])
     course = StringField('Course', [Optional()])
     education = StringField('Education', [Optional()])
     about_me = TextAreaField('About me', [Optional()])
-    date_of_birth = DateField('Date of birth', [Optional()])   
     new_password = PasswordField('New password', [Optional()]) 
 
     def validate_email(self, email):
