@@ -15,11 +15,13 @@
         <!-- post card -->
         <div class=" col-xm-12 col-md-8 col-lg-6 ">
             <div class="d-flex profile mb-5">
-                <img src="https://randomuser.me/api/portraits/women/12.jpg"
-                    class="mb-3 img-fluid profile rounded-circle">
+                <img src="{% if current_user.is_authenticated %} {{current_user.create_avatar_image(s=200) }} {% endif %}"
+                    alt="" class="mb-3 img-fluid profile rounded-circle">
 
                 <div class="d-flex my-post">
+                    {% if current_user.is_authenticated %}
                     {% include "components/modal.html" %}
+                    {% endif %}
                 </div>
             </div>
 
