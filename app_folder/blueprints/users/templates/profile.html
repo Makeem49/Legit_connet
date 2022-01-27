@@ -7,7 +7,7 @@
             <div class="banner">
                 <img src="{{url_for('static', filename='images/banner.jpg')}}" alt="" class="img-fluid">
             </div>
-            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt=""
+            <img src="{{user.create_avatar_image(s=200)}}" alt=""
                 class="h6 rounded-circle img-fluid my-profile-image">
             <div class="user-details mb-4">
                 <h3 class="mx-">{{user.surname}} {{user.first_name}} </h3>
