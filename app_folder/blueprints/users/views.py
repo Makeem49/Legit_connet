@@ -23,17 +23,16 @@ def settings():
         current_user.password = form.password.data
         current_user.email = form.email.data
         current_user.course = form.course.data
-        current_user.eductaion = form.education.data
+        current_user.education = form.education.data
         current_user.about_me = form.about_me.data
-        current_user.date_of_birth  = form.about_me.data
-        current_user.password = form.new_password.data
+        current_user.surname = form.surname.data
+        current_user.first_name = form.first_name.data
         db.session.commit()
         flash('Profile updated', 'success')
         return redirect(url_for('user.profile', username=current_user.username))
     form.surname.data = current_user.surname
     form.username.data = current_user.username
-    form.name.data = current_user.first_name
-    form.password.data = "hoifhewoihihflqe"
+    form.first_name.data = current_user.first_name
     form.email.data = current_user.email
     form.course.data = current_user.course
     form.education.data = current_user.education
