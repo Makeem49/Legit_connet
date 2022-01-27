@@ -1,6 +1,3 @@
-from email.policy import default
-from http import server
-from numbers import Integral
 from app_folder.extensions import db 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -11,6 +8,8 @@ from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+import hashlib
+from flask import request
 
 
 # @login_manager.user_loader
@@ -85,8 +84,14 @@ class User(db.Model, UserMixin):
 
     # relationship 
     roles_id = Column(Integer, ForeignKey('roles.id'))
+
+    # user location 
+    loaction = Column(String(100), server_default='', nullable=True)
     
     role = relationship('Role', back_populates='users')
+
+    # user avater
+    image_avater_hash = Column(String(100), server_default='')
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -94,7 +99,10 @@ class User(db.Model, UserMixin):
             if self.email == current_app.config['ADMIN_EMAIL']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             else: 
-                self.role = Role.query.filter_by(default=True).first()      
+                self.role = Role.query.filter_by(default=True).first()   
+
+        if self.email is not None and self.image_avater_hash is None:
+            self.image_avater_hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
 
     @property
     def password(self):
@@ -166,6 +174,7 @@ class User(db.Model, UserMixin):
             return False
 
         self.email = data.get('new_email')
+        self.image_avater_hash = hashlib.md5(self.email.lower()).hexdigest() 
         db.session.add(self)
         db.session.commit()
         return True
@@ -196,9 +205,29 @@ class User(db.Model, UserMixin):
         return f'{self.surname} {self.first_name} is created.'
 
 
+    def create_avatar_image(self, s=100, r='g', d="retro"):
+        if request.is_secure:
+            url = 'https://www.gravatar.com/avatar'
+        else:
+            url = "http://www.gravatar.com/avatar"
+
+        if self.image_avater_hash:
+            hash = self.image_avater_hash
+        else: 
+            hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
+
+        return f'{url}/{hash}?s={s}&r={r}&d={d}'
+
+# Anonymous class
+
 class MyAnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
 
     def is_admin(self):
         return False
+
+    
+    def create_avatar_image(self, s=None):
+        return  "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=robohash"
+
