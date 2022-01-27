@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-3">
+    <h3>Admin dashboard</h3>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">S/N</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Username</th>
+                <th scope="col">Status</th>
+                <th scope="col">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <th scope="row">{{user.id}}</th>
+                <td>{{user.first_name}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.confirmed}}</td>
+                <td>{{user.active}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
