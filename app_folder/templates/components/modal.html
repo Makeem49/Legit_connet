@@ -12,11 +12,11 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex profile mb-5">
-                    <img src="https://randomuser.me/api/portraits/women/12.jpg"
+                    <img src="{{current_user.create_avatar_image(s=200)}}" alt=""
                         class="mb-3 img-fluid profile rounded-circle">
 
                     <div class="d-flex flex-column proifle-post-summary">
-                        <h4>John Doe</h4>
+                        <h4>{{current_user.first_name}} {{ current_user.surname }}</h4>
                     </div>
                 </div>
 

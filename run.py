@@ -11,10 +11,6 @@ app = create_app(celery=celery)
 
 migrate = Migrate(app, db)
 
-@app.app_context_processor
-def inject_permisstion():
-    return dict(Permission=Permission)
-
 
 @app.shell_context_processor
 def make_shell_context():
