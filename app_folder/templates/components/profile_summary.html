@@ -2,10 +2,10 @@
     <div class="card-body">
         <div class="d-flex justify-content-center">
             <!-- <h5><img src="https://randomuser.me/api/portraits/women/12.jpg" class="rounded-circle mb-3"> -->
-                <img src="{{current_user.create_avatar_image(s=200)}}" alt=""
-                class="rounded-circle mb-3">
+            <img src="{{current_user.create_avatar_image(s=200)}}" alt="" class="rounded-circle mb-3">
             </h5>
         </div>
+        {% if current_user.is_authenticated %}
         <div class="d-flex justify-content-center">
             <ul>
                 <h4 class="card-title text-center">John Doe</h4>
@@ -26,5 +26,13 @@
             <p>200</p>
 
         </div>
+        {% else %}
+        <div class="d-flex justify-content-center">
+            <ul>
+                <h4 class="card-title text-center">Anonymous user</h4>
+                <p class="card-text">You are browsing as anonymous.</p>
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
