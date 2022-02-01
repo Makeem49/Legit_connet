@@ -10,7 +10,7 @@ from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import hashlib
 from flask import request
-
+from app_folder.blueprints.posts.models import Post
 
 # @login_manager.user_loader
 # def load_user(session_token):
@@ -26,6 +26,7 @@ class Permission:
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENT = 0x08
     ADMINISTER = 0x80
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -84,11 +85,12 @@ class User(db.Model, UserMixin):
 
     # relationship 
     roles_id = Column(Integer, ForeignKey('roles.id'))
+    role = relationship('Role', back_populates='users')
+    posts = relationship(Post, backref='user')
 
     # user location 
     loaction = Column(String(100), server_default='', nullable=True)
     
-    role = relationship('Role', back_populates='users')
 
     # user avater
     image_avater_hash = Column(String(100), server_default='')
