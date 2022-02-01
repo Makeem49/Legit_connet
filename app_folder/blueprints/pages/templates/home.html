@@ -11,19 +11,20 @@
         <div class="col-3  d-none d-lg-block my-profile-fixed">
             {% include 'components/profile_summary.html' %}
         </div>
-
+        
         <!-- post card -->
         <div class=" col-xm-12 col-md-8 col-lg-6 ">
+            {% if current_user.is_authenticated %}
             <div class="d-flex profile mb-5">
                 <img src="{% if current_user.is_authenticated %} {{current_user.create_avatar_image(s=200) }} {% endif %}"
                     alt="" class="mb-3 img-fluid profile rounded-circle">
 
                 <div class="d-flex my-post">
-                    {% if current_user.is_authenticated %}
+
                     {% include "components/modal.html" %}
-                    {% endif %}
                 </div>
             </div>
+            {% endif %}
 
             <!-- 2 -->
             {% include "components/post_component.html" %}
