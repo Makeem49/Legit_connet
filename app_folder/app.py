@@ -9,13 +9,15 @@ from app_folder.blueprints.admin import admin
 from app_folder.blueprints.moderator import moderator
 from app_folder.blueprints.users.model import MyAnonymousUser
 
+# extension 
 from app_folder.extensions import db 
 from app_folder.extensions import csrf
 from app_folder.extensions import migrate
 from app_folder.extensions import mail
 from app_folder.extensions import login_manager
+from app_folder.extensions import moment
+from app_folder.extensions import pagedown
 
-from app_folder.extensions import login_manager
 
 from app_folder.celery_utils import init_celery
 
@@ -83,3 +85,5 @@ def extensions(app):
     migrate.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    moment.init_app(app)
+    pagedown.init_app(app)
