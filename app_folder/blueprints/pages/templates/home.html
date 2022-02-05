@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% import 'components/flash_message.html' as message %}
+{% import 'components/pagination.html' as f with context %}
 
 
 {% block content %}
@@ -11,10 +12,10 @@
         <div class="col-3  d-none d-lg-block my-profile-fixed">
             {% include 'components/profile_summary.html' %}
         </div>
-        
+
         <!-- post card -->
         <div class=" col-xm-12 col-md-8 col-lg-6 ">
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and current_user.can(Permission.WRITE_ARTICLES) %}
             <div class="d-flex profile mb-5">
                 <img src="{% if current_user.is_authenticated %} {{current_user.create_avatar_image(s=200) }} {% endif %}"
                     alt="" class="mb-3 img-fluid profile rounded-circle">
@@ -27,14 +28,13 @@
             {% endif %}
 
             <!-- 2 -->
+            {% for post in posts %}
             {% include "components/post_component.html" %}
-            {% include "components/post_component.html" %}
-            {% include "components/post_component.html" %}
-            {% include "components/post_component.html" %}
-            {% include "components/post_component.html" %}
+            {% endfor %}
 
-            <!-- 3 -->
-
+            <div class='my-5'>
+                {{ f.render_pagination(pagination, 'page.home') }}
+            </div>
         </div>
 
 
@@ -50,10 +50,7 @@
                     {% include "components/trending.html" %}
                     {% include "components/trending.html" %}
                     {% include "components/trending.html" %}
-
-
                 </div>
-
             </div>
         </div>
 </div>
