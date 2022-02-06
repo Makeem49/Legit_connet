@@ -15,6 +15,7 @@ class UpdateCredentials(FlaskForm):
     education = StringField('Education', [Optional()])
     about_me = TextAreaField('About me', [Optional()])
     new_password = PasswordField('New password', [Optional()]) 
+    headline = TextAreaField('Head line', [Optional()])
 
     def validate_email(self, email):
         user = User.query.filter_by(username=email.data).first()
@@ -26,3 +27,6 @@ class UpdateCredentials(FlaskForm):
         if not user.verify_password(password.data):
             raise ValidationError('Incorrect pasword, we need to verify your account before updating it.')
     
+    
+class EditPostForm(FlaskForm):
+    content = TextAreaField('Content', [InputRequired()])
