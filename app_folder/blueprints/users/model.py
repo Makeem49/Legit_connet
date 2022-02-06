@@ -6,11 +6,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app_folder.extensions import login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
-from flask import current_app
+from flask import current_app, session
+from app_folder.blueprints.pages.models import Post
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import hashlib
 from flask import request
-from app_folder.blueprints.posts.models import Post
+from lib.permissions import Permission
+from lib.custom_token import serializer
 
 # @login_manager.user_loader
 # def load_user(session_token):
@@ -20,12 +22,6 @@ from app_folder.blueprints.posts.models import Post
 def load_user(id):
     return User.query.get(int(id))
 
-class Permission:
-    FOLLOW = 0x01
-    COMMENT = 0x02
-    WRITE_ARTICLES = 0x04
-    MODERATE_COMMENT = 0x08
-    ADMINISTER = 0x80
 
 
 class Role(db.Model):
@@ -59,6 +55,7 @@ class Role(db.Model):
             
 
 class User(db.Model, UserMixin):
+
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -68,7 +65,7 @@ class User(db.Model, UserMixin):
     email = Column(String(60), nullable=False, unique=True)
     password = Column(String(24), nullable=False)
     gender = Column(String(10), nullable=False)
-    password_hash = Column(String(128))
+    password_hash = Column(String(250))
     active = Column(Boolean, server_default='true', nullable=False)
     member_since = Column(DateTime, default=datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.utcnow)
@@ -79,6 +76,7 @@ class User(db.Model, UserMixin):
     education = Column(String(100), nullable=True, server_default='')
     course = Column(String(100), nullable=True, server_default='')
     about_me = Column(Text, nullable=True, server_default='')
+    headline = Column(Text, nullable=True, server_default='')
 
     # custom token 
     session_token = Column(Text, nullable=False, server_default='', unique=True)
@@ -219,6 +217,37 @@ class User(db.Model, UserMixin):
             hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
 
         return f'{url}/{hash}?s={s}&r={r}&d={d}'
+
+    @staticmethod
+    def add_users(count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()
+        for num in range(0,100):
+            username = forgery_py.internet.user_name()
+            password = forgery_py.basic.password()
+            user = User(
+                username = username,
+                first_name = forgery_py.internet.first_name(),
+                surname = forgery_py.name.last_name(),
+                email = forgery_py.email.address(),
+                password = password,
+                gender = forgery_py.personal.gender().lower(),
+                member_since    = forgery_py.date.date(),
+                confirmed = random.choice([True, False]),
+                job_title = forgery_py.name.job_title(),
+                about_me = forgery_py.lorem_ipsum.sentence(),
+                session_token = serializer().dumps([username, password]),
+                loaction = forgery_py.name.location()
+            )
+            db.session.add(user)
+
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
 
 # Anonymous class
 
