@@ -1,5 +1,5 @@
 from flask import Blueprint
-from .model import Permission
+from lib.permissions import Permission
 
 user = Blueprint('user', __name__, template_folder="templates", url_prefix='/user')
 
