@@ -96,6 +96,10 @@ a.account-create{
     margin-left: 2rem;
 }
 
+.nounderline {
+    text-decoration: none !important
+  }
+
 .user-details{
     margin-top: 6rem ;
     margin-left: 2rem;
@@ -122,6 +126,12 @@ a.account-create{
     right: 0;
     text-align: center;
     width: 100%;
+}
+
+
+.center_post{
+    margin: 0 auto;
+    max-width: 1000px;
 }
 
 
