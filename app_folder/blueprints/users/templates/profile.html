@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% import 'components/pagination.html' as f with context %}
+
 {% block content %}
 
 <section class="mt-4 container">
@@ -7,8 +9,7 @@
             <div class="banner">
                 <img src="{{url_for('static', filename='images/banner.jpg')}}" alt="" class="img-fluid">
             </div>
-            <img src="{{user.create_avatar_image(s=200)}}" alt=""
-                class="h6 rounded-circle img-fluid my-profile-image">
+            <img src="{{user.create_avatar_image(s=200)}}" alt="" class="h6 rounded-circle img-fluid my-profile-image">
             <div class="user-details mb-4">
                 <h3 class="mx-">{{user.surname}} {{user.first_name}} </h3>
                 <p>FUll-Stack Web Engineer (Python | React | Microservices )</p>
@@ -18,11 +19,13 @@
 
             <button type="button" class="btn btn-primary text-start my-4">Your Posts</button>
 
+            {% for post in posts %}
             {% include 'components/post_component.html' %}
-            {% include 'components/post_component.html' %}
-            {% include 'components/post_component.html' %}
-            {% include 'components/post_component.html' %}
-            {% include 'components/post_component.html' %}
+            {% endfor %}
+
+            
+            {{ f.render_profile_pagination(pagination, 'user.profile' ) }}
+
         </div>
 
         <div class="related-user d-none d-md-block col-md-3">
@@ -66,5 +69,6 @@
         </div>
     </div>
 </section>
+
 
 {% endblock %}
