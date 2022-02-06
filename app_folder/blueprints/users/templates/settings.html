@@ -14,7 +14,7 @@
 
             <div class="my-4">
                 <img src="{{current_user.create_avatar_image(s=200)}}" alt=""
-                class="h6 rounded-circle img-fluid profile">
+                    class="h6 rounded-circle img-fluid profile">
                 <input class="mx-4" type="file" name="Change profile pictures" id="">
             </div>
             <div class="row my-3">
@@ -48,7 +48,15 @@
                 </div>
             </div>
             <div class="my-5">
-                {{f.render_form_field(form.about_me)}}
+                <div class="form-floating">
+                    {{ form.about_me(class="form-control", placeholder="Leave a comment here" , id="floatingTextarea2",
+                    style="max-height: 350px; min-height: 200px;") }}
+                    <label for="floatingTextarea2">About me...</label>
+                </div>
+            </div>
+
+            <div class="my-5">
+                {{f.render_form_field(form.headline)}}
             </div>
 
             <div class="d-xm-block d-md-flex justify-content-between">
