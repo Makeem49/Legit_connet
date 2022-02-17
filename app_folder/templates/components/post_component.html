@@ -12,7 +12,7 @@
                 class="text-secondary text-decoration-none">
                 <div class="d-flex flex-column proifle-post-summary">
                     <h4>{{post.user.first_name}} {{post.user.surname}}</h4>
-                    <p class="card-text text-start">{{post.user.headline}}</p>
+                    <p class="card-text text-start">{{post.user.job_title}}</p>
                 </div>
                 <small class="proifle-post-summary">{{moment(post.date_posted).fromNow()}}</small>
             </a>
@@ -25,23 +25,23 @@
 
         <div class="my-3">
             {% if not request.endpoint == 'user.post' %}
-                <a href="{{url_for('user.post', id=post.id)}}" class="my-2">Read more</a>
+            <a href="{{url_for('user.post', id=post.id)}}" class="my-2">Read more</a>
             {% elif current_user == post.user and current_user.can(Permission.WRITE_ARTICLES) %}
-                <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-primary">Edit post</a>
+            <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-primary">Edit post</a>
             {% elif current_user.is_admin() %}
-            <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-secondary">Admin edit post</a> 
+            <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-secondary">Admin edit post</a>
             {% endif %}
         </div>
 
 
         <div class="d-flex w-25">
             {% if not request.endpoint == 'user.post' %}
-                {% if current_user == post.user and current_user.can(Permission.WRITE_ARTICLES) %}
-                    <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-primary">Edit post</a>
-                {% endif %}
-                {% if current_user.is_admin() %}
-                    <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-secondary">Admin edit post</a>
-                {% endif %}
+            {% if current_user == post.user and current_user.can(Permission.WRITE_ARTICLES) %}
+            <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-primary">Edit post</a>
+            {% endif %}
+            {% if current_user.is_admin() %}
+            <a href="{{url_for('user.edit_post', id=post.id)}}" class="btn btn-secondary">Admin edit post</a>
+            {% endif %}
             {% endif %}
         </div>
 

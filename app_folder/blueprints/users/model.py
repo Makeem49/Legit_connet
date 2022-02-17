@@ -52,9 +52,20 @@ class Role(db.Model):
 
     def __repr__(self) :
         return f"Role {self.name}"
-            
+
+class Follow(db.Model):
+    """
+    This Follow table serve as a relationship table between follower and followed users
+    """
+    follower_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    followed_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
 
 class User(db.Model, UserMixin):
+    """
+    User model which inherit from db.Model, UserMixin class
+    """
 
     __tablename__ = 'users'
 
@@ -84,7 +95,7 @@ class User(db.Model, UserMixin):
     # relationship 
     roles_id = Column(Integer, ForeignKey('roles.id'))
     role = relationship('Role', back_populates='users')
-    posts = relationship(Post, backref='user')
+    posts = relationship(Post, backref='user', lazy='dynamic', cascade='all, delete-orphan')
 
     # user location 
     loaction = Column(String(100), server_default='', nullable=True)
@@ -92,6 +103,19 @@ class User(db.Model, UserMixin):
 
     # user avater
     image_avater_hash = Column(String(100), server_default='')
+
+    followed = relationship('Follow', 
+                    foreign_keys = [Follow.follower_id], 
+                    backref=db.backref('follower', lazy='joined'),
+                    lazy='dynamic',
+                    cascade = 'all, delete-orphan')
+
+    followers = relationship('Follow', 
+                    foreign_keys = [Follow.followed_id], 
+                    backref=db.backref('followed', lazy='joined'),
+                    lazy='dynamic',
+                    cascade = 'all, delete-orphan')
+    
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -103,6 +127,23 @@ class User(db.Model, UserMixin):
 
         if self.email is not None and self.image_avater_hash is None:
             self.image_avater_hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
+
+    def is_following(self, user):
+        return self.followed.filter_by(followed_id = user.id).first() is None
+
+    def is_followed_by(self, user):
+        return self.follower.filter_by(follower_id = user.id).first() is None
+    
+    def follow(self, user):
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+
+    def unfollow(self, user):
+        f = self.followed.filter_by(followed_id = user.id).first()
+        if f : 
+            db.session.delete(f)
+            db.session.commit()
 
     @property
     def password(self):
@@ -121,7 +162,7 @@ class User(db.Model, UserMixin):
 
     def generate_confirmation_token(self):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-        return s.dumps({"confirm":self.id})
+        return s.dumps({"confirm":self.id}).decode("utf-8") 
 
     def confirm_token(self, token):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -139,7 +180,7 @@ class User(db.Model, UserMixin):
     
     def generate_password_rest_token(self):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-        return s.dumps({"confirm":self.id})
+        return s.dumps({"confirm":self.id}).decode("utf-8")
 
     @staticmethod
     def confirm_password_reset_token(token, new_password):
@@ -160,7 +201,7 @@ class User(db.Model, UserMixin):
 
     def generate_token_for_new_email_address(self, new_email):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-        return s.dumps({'email' : self.email, 'new_email' : new_email})
+        return s.dumps({'email' : self.email, 'new_email' : new_email}).decode("utf-8")
 
 
     def confirm_new_email_address(self, token):
@@ -221,10 +262,10 @@ class User(db.Model, UserMixin):
     @staticmethod
     def add_users(count=100):
         from sqlalchemy.exc import IntegrityError
-        from random import seed
+        import random
         import forgery_py
 
-        seed()
+        random.seed()
         for num in range(0,100):
             username = forgery_py.internet.user_name()
             password = forgery_py.basic.password()

@@ -16,7 +16,6 @@ from app_folder.extensions import migrate
 from app_folder.extensions import mail
 from app_folder.extensions import login_manager
 from app_folder.extensions import moment
-from app_folder.extensions import pagedown
 
 
 from app_folder.celery_utils import init_celery
@@ -86,4 +85,4 @@ def extensions(app):
     mail.init_app(app)
     login_manager.init_app(app)
     moment.init_app(app)
-    pagedown.init_app(app)
+
