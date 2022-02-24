@@ -84,7 +84,6 @@ def forget_password():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_password_rest_token()
-            print(user)
             send_mail.delay(user.email, 'Legit Password Reset', 'mail/resetpassword', name=user.first_name, token=token)
             flash('A password reset link has been sent to your email address.', 'success')
             return redirect(url_for('auth.login'))
