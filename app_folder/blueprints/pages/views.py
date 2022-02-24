@@ -22,12 +22,15 @@ def get_current_blueprint():
 def home():
     form = PostForm()
     page = request.args.get('page', 1 , int)
-    print(request.args.get('page'))
+    count = None
+    if current_user.is_authenticated:
+        count = current_user.total_post_view
     if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
         post = Post(content = form.content.data, user = current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('page.home'))
     pagination = Post.query.order_by(Post.date_posted.desc()).paginate(page, current_app.config['LEGIT_POST_PER_PAGE'], error_out=False)
+    print(pagination)
     posts = pagination.items
-    return render_template('home.html', posts=posts, form=form, pagination=pagination)
+    return render_template('home.html', posts=posts, form=form, pagination=pagination, count=count)
