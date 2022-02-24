@@ -8,7 +8,7 @@
         {% if current_user.is_authenticated %}
         <div class="d-flex justify-content-center">
             <ul>
-                <h4 class="card-title text-center">John Doe</h4>
+                <h4 class="card-title text-center">{{current_user.first_name}} {{current_user.surname}}</h4>
                 <p class="card-text">{{current_user.headline}}</p>
             </ul>
         </div>
@@ -17,12 +17,12 @@
 
         <div class="d-flex justify-content-between">
             <span class="text-muted">Who viewed your profile</span>
-            <span>223</span>
+            <span>{{current_user.profile_view_count}}</span>
         </div>
 
         <div class="d-flex justify-content-between">
             <p class="text-muted">Views of your post</p>
-            <p>200</p>
+            <p>{{current_user.total_post_view}}</p>
 
         </div>
         {% else %}
