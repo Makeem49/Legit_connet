@@ -134,6 +134,15 @@ a.account-create{
     max-width: 1000px;
 }
 
+.following_follower {
+    color: grey;
+    display: inline;
+}
+
+.following_follower a{
+    text-decoration: none;
+}
+
 
 @media (min-width: 992px) {
     .modal-dialog {
