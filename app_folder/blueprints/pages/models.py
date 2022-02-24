@@ -24,6 +24,9 @@ class Post(db.Model):
     author_id = Column(Integer, ForeignKey('users.id'))
     keywords = relationship('Keyword', secondary=post_keywords, back_populates='posts', lazy='dynamic') # Post_instance.keywords will return a list which you can  append a keywords to it e.g post.keywords.append(Keyword(name='wolrd'))
     
+    # post view count 
+    post_view_count = Column(Integer, default=0)
+
     # user = relationship('User', back_populates='posts')
 
     @staticmethod
@@ -39,7 +42,15 @@ class Post(db.Model):
             post = Post(content = forgery_py.lorem_ipsum.paragraphs(), date_posted=forgery_py.date.date(True), user = user)
             db.session.add(post)
             db.session.commit()
-
+    
+    def get_total_post_view(self):
+        if self.post_view_count == None:
+            self.post_view_count = 0
+            db.session.commit()
+        else:
+            self.post_view_count += 1
+        db.session.commit()
+        return self.post_view_count
 
 class Keyword(db.Model):
     __tablename__ = 'keywords'
