@@ -1,6 +1,6 @@
 from crypt import methods
 from os import abort
-from flask import redirect, render_template, request, url_for, flash , current_app
+from flask import redirect, render_template, request, url_for, flash , current_app, jsonify
 from app_folder.blueprints.users import user
 from app_folder.blueprints.users.model import User
 from flask_login import login_required, current_user
@@ -10,12 +10,18 @@ from flask import abort
 from app_folder.blueprints.pages.models import Post
 from lib.permissions import Permission
 from .forms import EditPostForm
+from lib.verify_login import permission_required
 
 
 @user.route('/profile/<string:username>')
 def profile(username):
     page = request.args.get('page', 1, int)
     user = User.query.filter_by(username=username).first()
+    if user.profile_view_count is None and user != current_user:
+        user.profile_view_count = 1
+    elif user != current_user:   
+        user.profile_view_count += 1    
+    db.session.commit()
     if user is None:
         abort(404)    
     pagination = Post.query.filter_by(user=user).order_by(Post.date_posted.desc()).paginate(page, current_app.config['LEGIT_POST_PER_PAGE'], error_out=False)
@@ -54,6 +60,8 @@ def settings():
 @login_required
 def post(id):
     post = Post.query.get_or_404(id)
+    if current_user != post.user:
+        post.user.get_user_total_post_views()
     return render_template('post.html', posts=[post])
 
 @user.route('/edit_post/<int:id>', methods=['GET', 'POST'])
@@ -70,3 +78,55 @@ def edit_post(id):
         return redirect(url_for('user.post', id=post.id))
     form.content.data = post.content
     return render_template('edit_post.html', form=form, post=post)
+
+@user.route('/follow/<string:username>', methods=['GET'])
+@login_required
+@permission_required(Permission.FOLLOW)
+def follow(username):
+    user = User.query.filter_by(username = username).first()
+    print(current_user.is_following(user), 'current user status')
+    if user is not None and not current_user.is_following(user):
+        current_user.follow(user)
+        flash(f'You\'re now following {user.username}', 'success')
+        return redirect(url_for('user.profile', username=user.username))
+    if user is None:
+        flash('Invalid user', 'info')
+        return redirect(url_for('page.home'))
+    
+    if current_user.is_following(user):
+        flash('You\'re following this user', 'info')
+    return redirect(url_for('user.profile', username=user.username))
+
+
+@user.route('/unfollow/<string:username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is not None and current_user.is_following(user):
+        current_user.unfollow(user)
+        flash(f'You\'ve unfollow {user.username}.', 'success')
+        return redirect(url_for('user.profile', username=user.username))
+    
+    if user is None:
+        flash('Invalid user', 'warning')
+        return redirect(url_for('/'))
+
+
+@user.route('/followers/<string:username>')
+def followers(username):
+    user = User.query.filter_by(username=username).first()
+    page = request.args.get('page', 1, int)
+
+    if user is None:
+        flash('User not found', 'success')
+        return redirect(url_for('/'))
+    
+    pagination = user.followers.all()
+
+    follows = [{'users' : item.follower, 'timestamp' : item.timestamp} for item in pagination]
+    print(follows)
+    return {'followes' : follows}
+
+
+
