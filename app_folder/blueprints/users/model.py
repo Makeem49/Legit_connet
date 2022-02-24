@@ -100,6 +100,9 @@ class User(db.Model, UserMixin):
     # user location 
     loaction = Column(String(100), server_default='', nullable=True)
     
+    # profile view count 
+    profile_view_count = Column(Integer, default=0)
+    total_post_view = Column(Integer, default=0)
 
     # user avater
     image_avater_hash = Column(String(100), server_default='')
@@ -129,21 +132,38 @@ class User(db.Model, UserMixin):
             self.image_avater_hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
 
     def is_following(self, user):
-        return self.followed.filter_by(followed_id = user.id).first() is None
+        return self.followed.filter_by(followed_id = user.id).first() is not None
 
     def is_followed_by(self, user):
-        return self.follower.filter_by(follower_id = user.id).first() is None
+        return self.followers.filter_by(follower_id = user.id).first() is not None
     
     def follow(self, user):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
             db.session.add(f)
+            db.session.commit()
 
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id = user.id).first()
         if f : 
             db.session.delete(f)
             db.session.commit()
+
+    def get_user_total_post_views(self):
+        for post in self.posts.all():
+            # print(post)
+            # print(self.total_post_view, 'user total view')
+            if self.total_post_view == None:
+                self.total_post_view = 0
+                db.session.commit()
+            if post.post_view_count == None:
+                self.total_post_view = 0
+                db.session.commit()
+            else:
+                self.total_post_view += 1
+                db.session.commit()
+        return True
+        
 
     @property
     def password(self):
