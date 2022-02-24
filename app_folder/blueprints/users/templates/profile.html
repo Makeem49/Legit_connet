@@ -12,9 +12,28 @@
             <img src="{{user.create_avatar_image(s=200)}}" alt="" class="h6 rounded-circle img-fluid my-profile-image">
             <div class="user-details mb-4">
                 <h3 class="mx-">{{user.surname}} {{user.first_name}} </h3>
-                <p>FUll-Stack Web Engineer (Python | React | Microservices )</p>
-                <p>Ladoke Akintola University of Technology</p>
-                <p>Bachelor of Technology in Urban studies and Desi</p>
+                <p>{{user.headline}}</p>
+                <p>{{user.education}}</p>
+                <p>{{user.course}}</p>
+            </div>
+
+            <div>
+                {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+                {% if not current_user.is_following(user) %}
+                    <a href="{{url_for('user.follow', username=user.username)}}" class="btn btn-primary">Follow</a>
+                {% else %}
+                    <a href="{{url_for('user.unfollow', username=user.username)}}" class="btn btn-primary">Unfollow
+                    {{user.username}}</a>
+                {% endif %}
+                {% endif %}
+                    <div class="following_follower">
+                        <span><a href="{{url_for('user.followers', username=user.username)}}" class="label label-defualt">{{user.followers.count()}}</a> :Followers</span>
+                        <span><a href="" class="label label-defualt">{{user.followed.count()}}</a>: Following</span>
+                    </div>
+                {% if current_user != user and user.is_following(current_user) %}
+                    <span>{{user.username}} follows you</span>
+                {% endif %}
+                <a href=""></a>
             </div>
 
             <button type="button" class="btn btn-primary text-start my-4">Your Posts</button>
@@ -23,7 +42,7 @@
             {% include 'components/post_component.html' %}
             {% endfor %}
 
-            
+
             {{ f.render_profile_pagination(pagination, 'user.profile' ) }}
 
         </div>
