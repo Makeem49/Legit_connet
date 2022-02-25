@@ -1,6 +1,6 @@
 from app_folder.extensions import db 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+# from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+# from sqlalchemy.orm import relationship
 from sqlalchemy.types import Text
 from werkzeug.security import generate_password_hash, check_password_hash
 from app_folder.extensions import login_manager
@@ -27,11 +27,11 @@ def load_user(id):
 class Role(db.Model):
     __tablename__ = 'roles'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
-    default = Column(Boolean, server_default='false', index=True)
-    permissions = Column(Integer)
-    users = relationship('User', back_populates='role')
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+    default = db.Column(db.Boolean, server_default='false', index=True)
+    permissions = db.Column(db.Integer)
+    users = db.relationship('User', back_populates='role')
 
     @staticmethod
     def insert_roles():
@@ -57,9 +57,9 @@ class Follow(db.Model):
     """
     This Follow table serve as a relationship table between follower and followed users
     """
-    follower_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    followed_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
 
 class User(db.Model, UserMixin):
@@ -69,51 +69,51 @@ class User(db.Model, UserMixin):
 
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    surname = Column(String(50), nullable=False)
-    first_name = Column(String(50), nullable=False)
-    username = Column(String(), nullable=False, unique=True)
-    email = Column(String(60), nullable=False, unique=True)
-    password = Column(String(24), nullable=False)
-    gender = Column(String(10), nullable=False)
-    password_hash = Column(String(250))
-    active = Column(Boolean, server_default='true', nullable=False)
-    member_since = Column(DateTime, default=datetime.utcnow)
-    last_seen = Column(DateTime, default=datetime.utcnow)
-    confirmed = Column(Boolean, server_default='f', nullable=False)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    surname = db.Column(db.String(50), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(), nullable=False, unique=True)
+    email = db.Column(db.String(60), nullable=False, unique=True)
+    password = db.Column(db.String(24), nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
+    password_hash = db.Column(db.String(250))
+    active = db.Column(db.Boolean, server_default='true', nullable=False)
+    member_since = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    confirmed = db.Column(db.Boolean, server_default='f', nullable=False)
 
     # Experience 
-    job_title = Column(String(250), nullable=True, server_default='')
-    education = Column(String(100), nullable=True, server_default='')
-    course = Column(String(100), nullable=True, server_default='')
-    about_me = Column(Text, nullable=True, server_default='')
-    headline = Column(Text, nullable=True, server_default='')
+    job_title = db.Column(db.String(250), nullable=True, server_default='')
+    education = db.Column(db.String(100), nullable=True, server_default='')
+    course = db.Column(db.String(100), nullable=True, server_default='')
+    about_me = db.Column(db.Text, nullable=True, server_default='')
+    headline = db.Column(db.Text, nullable=True, server_default='')
 
     # custom token 
-    session_token = Column(Text, nullable=False, server_default='', unique=True)
+    session_token = db.Column(db.Text, nullable=False, server_default='', unique=True)
 
     # relationship 
-    roles_id = Column(Integer, ForeignKey('roles.id'))
-    role = relationship('Role', back_populates='users')
-    posts = relationship(Post, backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    roles_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role = db.relationship('Role', back_populates='users')
+    posts = db.relationship(Post, backref='user', lazy='dynamic', cascade='all, delete-orphan')
 
     # user location 
-    loaction = Column(String(100), server_default='', nullable=True)
+    loaction = db.Column(db.String(100), server_default='', nullable=True)
     
     # profile view count 
-    profile_view_count = Column(Integer, default=0)
-    total_post_view = Column(Integer, default=0)
+    profile_view_count = db.Column(db.Integer, default=0)
+    total_post_view = db.Column(db.Integer, default=0)
 
     # user avater
-    image_avater_hash = Column(String(100), server_default='')
+    image_avater_hash = db.Column(db.String(100), server_default='')
 
-    followed = relationship('Follow', 
+    followed = db.relationship('Follow', 
                     foreign_keys = [Follow.follower_id], 
                     backref=db.backref('follower', lazy='joined'),
                     lazy='dynamic',
                     cascade = 'all, delete-orphan')
 
-    followers = relationship('Follow', 
+    followers = db.relationship('Follow', 
                     foreign_keys = [Follow.followed_id], 
                     backref=db.backref('followed', lazy='joined'),
                     lazy='dynamic',
