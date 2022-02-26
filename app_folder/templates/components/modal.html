@@ -23,11 +23,15 @@
                 <form action="{{url_for('page.home')}}" method="post">
                     {{form.hidden_tag()}}
                     <div class="form-floating">
-                        {{ form.content(class="form-control", placeholder="Leave a comment here" , id="floatingTextarea2",
+                        {{ form.content(class="form-control", placeholder="Leave a comment here" ,
+                        id="floatingTextarea2",
                         style="max-height: 350px; min-height: 200px;") }}
                         <label for="floatingTextarea2">Your post here.</label>
                     </div>
                     <div class="modal-footer">
+                        <div class="hash_tag">
+                            <span>Category hash tag: {{form.hash_tag()}}</span>
+                        </div>
                         <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Post</button>
                     </div>
                 </form>
