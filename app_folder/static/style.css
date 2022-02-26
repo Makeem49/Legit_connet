@@ -154,7 +154,10 @@ a.account-create{
     padding-top: 1rem;
 }
 
-
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
 
 .follower{
     display: flex;
