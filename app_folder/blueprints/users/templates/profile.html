@@ -28,7 +28,7 @@
                 {% endif %}
                     <div class="following_follower">
                         <span><a href="{{url_for('user.followers', username=user.username)}}" class="label label-defualt">{{user.followers.count()}}</a> :Followers</span>
-                        <span><a href="" class="label label-defualt">{{user.followed.count()}}</a>: Following</span>
+                        <span><a href="{{url_for('user.followers', username=user.username)}}" class="label label-defualt">{{user.followed.count()}}</a>: Following</span>
                     </div>
                 {% if current_user != user and user.is_following(current_user) %}
                     <span>{{user.username}} follows you</span>
