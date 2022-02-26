@@ -13,6 +13,7 @@ import hashlib
 from flask import request
 from lib.permissions import Permission
 from lib.custom_token import serializer
+from flask_login import current_user
 
 # @login_manager.user_loader
 # def load_user(session_token):
@@ -138,10 +139,12 @@ class User(db.Model, UserMixin):
         return self.followers.filter_by(follower_id = user.id).first() is not None
     
     def follow(self, user):
-        if not self.is_following(user):
+        if not self.is_following(user) and current_user != user :
             f = Follow(follower=self, followed=user)
             db.session.add(f)
             db.session.commit()
+        else:
+            raise AttributeError('You can not follow yourself')
 
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id = user.id).first()
@@ -278,6 +281,10 @@ class User(db.Model, UserMixin):
             hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest() 
 
         return f'{url}/{hash}?s={s}&r={r}&d={d}'
+
+    @property
+    def followed_post(self):
+        return db.session.query(Post).select_from(Follow).filter_by(follower_id=self.id).join(Post, Follow.followed_id==Post.author_id).all()
 
     @staticmethod
     def add_users(count=100):
