@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% import 'components/pagination.html' as f with context %}
+
+{% block content %}
+<div class="followers">
+
+    <div class="user_followers_page">
+        <a href="{{url_for('user.profile', username=user.username)}}">
+            <h4>{{user.first_name}} {{user.surname}}</h4>
+            <span>{{user.username}}</span>
+        </a>
+    </div>
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+                Follower
+            </button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
+                type="button" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Following
+            </button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            {% if follower %}
+            {% for follower in follower %}
+            <div class="follower">
+                <div class="follower_description">
+                    <div class="follower_img">
+                        <a href="{{url_for('user.profile', username=follower['user'].username)}}">
+                            <img src="{{follower['user'].create_avatar_image(s=50)}}" alt=""
+                                class="rounded-circle mb-3">
+                        </a>
+                    </div>
+                    <span class="follower_header">
+                        <span>
+                            {{follower['user'].username}} since {{moment(follower['timestamp']).fromNow()}}
+                        </span>
+                    </span>
+
+                </div>
+                <div class="follow_user">
+                    {% if current_user == follower['user'] %}
+                    <a href="#" class="btn btn-primary disable">Follow</a>
+                    {% else %}
+                    <a href="{{url_for('user.follow', username=follower['user'].username) }}"
+                        class="btn btn-primary">Follow</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>You have no follower</p>
+            {% endif %}
+
+            <div class="follower_pagination">
+                {{ f.render_profile_pagination(follower_pagination, 'user.followers') }}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-profile-tab">
+            {% if followed %}
+            {% for follow in followed %}
+            <div class="follower">
+                <div class="follower_description">
+                    <div class="follower_img">
+                        <a href="{{url_for('user.profile', username=follow['user'].username)}}">
+                            <img src="{{follow['user'].create_avatar_image(s=50)}}" alt="" class="rounded-circle mb-3">
+                        </a>
+                    </div>
+                    <span class="follower_header">
+                        <span>
+                            {{follow['user'].username}} since
+                        </span>
+                        <span>{{moment(follow['timestamp']).fromNow()}}</span>
+                    </span>
+
+                </div>
+                <div class="follow_user">
+                    {% if current_user == follow['user'] %}
+                    <a href="#" class="btn btn-primary disable">Follow</a>
+                    {% else %}
+                    <a href="{{url_for('user.follow', username=follow['user'].username) }}"
+                        class="btn btn-primary">Follow</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="follower_pagination">
+                {{ f.render_profile_pagination(followed_pagination, 'user.followers') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
