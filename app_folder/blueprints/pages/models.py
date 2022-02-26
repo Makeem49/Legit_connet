@@ -18,11 +18,11 @@ post_keywords = db.Table('post_keywords',
 class Post(db.Model):
     __tablename__  = 'posts'
 
-    id = Column(Integer, primary_key=True)
-    content = Column(Text)
-    date_posted = Column(DateTime, default=datetime.utcnow)
-    author_id = Column(Integer, ForeignKey('users.id'))
-    keywords = relationship('Keyword', secondary=post_keywords, back_populates='posts', lazy='dynamic') # Post_instance.keywords will return a list which you can  append a keywords to it e.g post.keywords.append(Keyword(name='wolrd'))
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    keywords = db.relationship('Keyword', secondary=post_keywords, back_populates='posts', lazy='dynamic') # Post_instance.keywords will return a list which you can  append a keywords to it e.g post.keywords.append(Keyword(name='wolrd'))
     
     # post view count 
     post_view_count = Column(Integer, default=0)
@@ -54,7 +54,7 @@ class Post(db.Model):
 
 class Keyword(db.Model):
     __tablename__ = 'keywords'
-    id = Column(Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
 
     Hash_Tag = OrderedDict([
         ('all', "All"),
@@ -71,5 +71,5 @@ class Keyword(db.Model):
         ("travel", "Travel"),
     ])
 
-    name = Column(Enum(*Hash_Tag, name='hash_tag', native_enum=False,  validate_strings = True), index=True, nullable=False, server_default='all')
-    posts = relationship(Post, secondary=post_keywords, back_populates='keywords', lazy='dynamic') #Keywords_instance.posts will return a list which you can  append a post to it e.g keyword.post.append(Post(post='lorem', author=author))
+    name = db.Column(db.Enum(*Hash_Tag, name='hash_tag', native_enum=False,  validate_strings = True), index=True, nullable=False, server_default='all')
+    posts = db.relationship(Post, secondary=post_keywords, back_populates='keywords', lazy='dynamic') #Keywords_instance.posts will return a list which you can  append a post to it e.g keyword.post.append(Post(post='lorem', author=author))
