@@ -94,7 +94,7 @@ def follow(username):
         return redirect(url_for('page.home'))
     
     if current_user.is_following(user):
-        flash('You\'re following this user', 'info')
+        flash('You\'re already following this user', 'info')
     return redirect(url_for('user.profile', username=user.username))
 
 
@@ -120,13 +120,29 @@ def followers(username):
 
     if user is None:
         flash('User not found', 'success')
-        return redirect(url_for('/'))
+        return redirect(url_for('page.home'))
     
-    pagination = user.followers.all()
+    follower_pagination = user.followers.paginate(page, current_app.config['LEGIT_FOLLOWERS_PER_PAGE'], error_out=False )
+    followed_pagination = user.followed.paginate(page, current_app.config['LEGIT_FOLLOWERS_PER_PAGE'], error_out=False)
 
-    follows = [{'users' : item.follower, 'timestamp' : item.timestamp} for item in pagination]
-    print(follows)
-    return {'followes' : follows}
+    follower = [{'user' : item.follower, 'timestamp' : item.timestamp} for item in follower_pagination.items]
+    followed = [ {'user' : item.followed , 'timestamp' : item.timestamp } for item in followed_pagination.items]
 
+    return render_template('followers.html', follower=follower, follower_pagination=follower_pagination, followed_pagination=followed_pagination, followed=followed, user=user)
 
+@user.route('/network/<string:username>')
+@login_required
+def network(username):
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    
+    page = request.args.get('page', 1, int)
+
+    follower_pagination = current_user.followers.paginate(page, current_app.config['LEGIT_FOLLOWERS_PER_PAGE'], error_out=False )
+    followed_pagination = current_user.followed.paginate(page, current_app.config['LEGIT_FOLLOWERS_PER_PAGE'], error_out=False)
+
+    follower = [{'user' : item.follower, 'timestamp' : item.timestamp} for item in follower_pagination.items]
+    followed = [ {'user' : item.followed , 'timestamp' : item.timestamp } for item in followed_pagination.items]
+
+    return render_template('followers.html', follower=follower, follower_pagination=follower_pagination, followed_pagination=followed_pagination, followed=followed, user=user)
 
