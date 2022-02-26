@@ -6,7 +6,7 @@ from app_folder.blueprints.users.model import User
 from .forms import PostForm
 from app_folder.extensions import db 
 from flask_login import login_required, current_user
-from .models import Post
+from .models import Post, Keyword
 from lib.permissions import Permission
 
 
@@ -26,8 +26,11 @@ def home():
     if current_user.is_authenticated:
         count = current_user.total_post_view
     if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
+        print(form.hash_tag.data)
+        category_hash_tag = Keyword(name=form.hash_tag.data)
         post = Post(content = form.content.data, user = current_user._get_current_object())
-        db.session.add(post)
+        post.keywords.append(category_hash_tag)
+        db.session.add_all([post, category_hash_tag])
         db.session.commit()
         return redirect(url_for('page.home'))
     pagination = Post.query.order_by(Post.date_posted.desc()).paginate(page, current_app.config['LEGIT_POST_PER_PAGE'], error_out=False)
