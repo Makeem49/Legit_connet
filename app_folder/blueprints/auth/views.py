@@ -5,7 +5,7 @@ from app_folder.blueprints.auth.forms import RegisterForm, LoginForm, ForgetPass
 from app_folder.blueprints.users.model import User
 from app_folder.extensions import db
 from app_folder.email import send_mail
-import os 
+import os
 from lib.safe_next_url import is_safe_url
 from flask_login import login_user, login_required, logout_user, current_user
 from lib.custom_token import serializer
@@ -16,14 +16,15 @@ from lib.verify_login import already_logged_in
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen()
-    if current_user.is_authenticated and not current_user.confirmed and request.endpoint[0:5] != 'auth.':  
+    if current_user.is_authenticated and not current_user.confirmed and request.endpoint[0:5] != 'auth.':
         return redirect(url_for('auth.unconfirm'))
 
 
-@auth.before_request 
+@auth.before_request
 def get_current_blueprint():
     g.name = request.endpoint
     g.active = 'active'
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 @already_logged_in
@@ -42,9 +43,11 @@ def login():
                     flash('You have successfully logged in', 'success')
                     return redirect(url_for('user.settings'))
             else:
-                flash("Your account has been deactivated, please contact the admin re-access your account.", 'info')
+                flash(
+                    "Your account has been deactivated, please contact the admin re-access your account.", 'info')
         elif user is None:
-            flash('There is no user associated with this account, please register to access this page.', 'warning')
+            flash(
+                'There is no user associated with this account, please register to access this page.', 'warning')
         else:
             flash("Incorrect credentials", 'warning')
     return render_template('login.html', form=form)
@@ -57,24 +60,27 @@ def register():
     if form.validate_on_submit():
         user = db.session.query(User).filter_by(email=form.email.data).first()
         if user is None:
-            surname = form.surname.data 
+            surname = form.surname.data
             first_name = form.name.data
             email = form.email.data
             password = form.password.data
             gender = form.gender.data
             username = form.username.data.lower()
-            user = User(surname=surname, first_name=first_name, email=email, password=password, gender=gender, 
-                                                        session_token=serializer().dumps([surname, password]), username=username)
+            user = User(surname=surname, first_name=first_name, email=email, password=password, gender=gender,
+                        session_token=serializer().dumps([surname, password]), username=username)
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirmation_token()
-            send_mail.delay(email, 'Legit Connet Account Confirmation', 'mail/registration', name=user.first_name, token=token )
-            flash('Your account has been register, you can now login to access your account', 'success')
+            send_mail.delay(email, 'Legit Connet Account Confirmation',
+                            'mail/registration', name=user.first_name, token=token)
+            flash(
+                'Your account has been register, you can now login to access your account', 'success')
             return redirect(url_for('auth.login'))
-        else: 
+        else:
             flash('There is an account associated with this email, kindly register with different email address.', 'info')
             return redirect(url_for('auth.register'))
     return render_template('register.html', form=form)
+
 
 @auth.route('/forget_password', methods=['GET', 'POST'])
 @already_logged_in
@@ -84,11 +90,14 @@ def forget_password():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_password_rest_token()
-            send_mail.delay(user.email, 'Legit Password Reset', 'mail/resetpassword', name=user.first_name, token=token)
+            print(user.email)
+            send_mail.delay("makeemtech@gmail.com", 'Legit Password Reset',
+                            'mail/resetpassword', name=user.first_name, token=token)
             flash('A password reset link has been sent to your email address.', 'success')
             return redirect(url_for('auth.login'))
-        else: 
-            flash('There is not account associated with this email address, register to have access.', 'warning') 
+        else:
+            flash(
+                'There is not account associated with this email address, register to have access.', 'warning')
             return redirect(url_for('auth.register'))
     return render_template('forget_password.html', form=form)
 
@@ -101,7 +110,7 @@ def password_reset(token):
         new_password = form.password.data
         user = User.confirm_password_reset_token(token, new_password)
         if user:
-            flash('Password reset successfully.' , 'success')
+            flash('Password reset successfully.', 'success')
             return redirect(url_for('auth.login'))
         else:
             flash('Invalid or expired token.', 'warning')
@@ -115,6 +124,7 @@ def logout():
     flash("You have successfully logout", 'success')
     return redirect(url_for('page.home'))
 
+
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
@@ -122,11 +132,11 @@ def confirm(token):
         return redirect(url_for('user.profile'))
     if current_user.confirm_token(token):
         flash('You account has been confirmed', 'success')
-    else: 
+    else:
         flash("Invalid token or token expired", 'error')
     return redirect(url_for('user.profile', username=current_user.username))
 
-    
+
 @auth.route('unconfirm')
 def unconfirm():
     if current_user.is_anonymous or current_user.confirmed:
@@ -141,9 +151,11 @@ def resend_confirmation():
         flash("Your account has been confirmed", 'success')
         return redirect(url_for('user.profile', username=current_user.username))
     token = current_user.generate_confirmation_token()
-    send_mail.delay(current_user.email, 'Account Confirmation', 'mail/registration', token=token)
+    send_mail.delay(current_user.email, 'Account Confirmation',
+                    'mail/registration', token=token)
     flash('Activation link sent.', 'success')
     return redirect(url_for('auth.unconfirm'))
+
 
 @auth.route('/update_email', methods=['GET', 'POST'])
 @login_required
@@ -152,10 +164,12 @@ def update_email_address():
     if form.validate_on_submit():
         email = form.new_email.data
         token = current_user.generate_token_for_new_email_address(email)
-        send_mail.delay(email, 'Legit Email Reset', 'mail/change_email', name=current_user.first_name, token=token)
+        send_mail.delay(email, 'Legit Email Reset', 'mail/change_email',
+                        name=current_user.first_name, token=token)
         flash('A link has been been sent to your new email address, please confirm by clicking it.', 'success')
         return redirect(url_for('user.settings'))
     return render_template('update_email.html', form=form)
+
 
 @auth.route('/comfirm_email/<token>')
 def confirm_email_address(token):
